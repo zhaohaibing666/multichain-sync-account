@@ -1,0 +1,29 @@
+syntax = "proto3";
+option go_package = "./protobuf/dal-wallet-go";
+package syncs;
+
+enum ReturnCode {
+    ERROR = 0;
+    SUCCESS = 1;
+}
+
+message BusinessRegisterRequest {
+    string consumer_token = 1;
+    string request_id = 2;
+    string  deposit_notify = 3;
+    string  withdraw_notify =4;
+    string  tx_flow_notify = 5;
+}
+
+message BusinessRegisterResponse {
+    ReturnCode code = 1;
+    string msg = 2;
+}
+
+
+service BusinessMiddleWireServices{
+
+    rpc businessRegister(BusinessRegisterRequest) returns (BusinessRegisterResponse){}        
+
+}
+    
