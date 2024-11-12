@@ -3,13 +3,12 @@ package database
 import (
 	"gorm.io/gorm"
 
-	"github.com/google/uuid"
-
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/google/uuid"
 )
 
 type Business struct {
-	GUID           uuid.UUID `gorm:"primaryKey" json:"guid"`
+	GUID           uuid.UUID `gorm:"primary_key" json:"guid"`
 	BusinessUid    string    `json:"business_uid"`
 	DepositNotify  string    `json:"deposit_notify"`
 	WithdrawNotify string    `json:"withdraw_notify"`
@@ -18,29 +17,23 @@ type Business struct {
 }
 
 type BusinessView interface {
-	QueryBusinessByUuid(string) (*Business, error)
+	QueryBusinessByUid(string) (*Business, error)
 }
 
-type BusinessDB interface {
+type BusinessDb interface {
 	BusinessView
-
-	StoreBusiness(*Business) error
+	storageBusiness(*Business) error
 }
 
-type businessDB struct {
+type businessDb struct {
 	gorm *gorm.DB
 }
 
-func NewBusinessDB(db *gorm.DB) BusinessDB {
-	return &businessDB{gorm: db}
+func NewBusinessDb(db *gorm.DB) BusinessDb {
+	return &businessDb{gorm: db}
 }
 
-func (db *businessDB) StoreBusiness(business *Business) error {
-	result := db.gorm.Create(business)
-	return result.Error
-}
-
-func (db *businessDB) QueryBusinessByUuid(businessUid string) (*Business, error) {
+func (db *businessDb) QueryBusinessByUid(businessUid string) (*Business, error) {
 	var business *Business
 	result := db.gorm.Table("business").Where("business_uid", businessUid).First(&business)
 	if result.Error != nil {
@@ -48,4 +41,9 @@ func (db *businessDB) QueryBusinessByUuid(businessUid string) (*Business, error)
 		return nil, result.Error
 	}
 	return business, nil
+}
+
+func (db *businessDb) storageBusiness(business *Business) error {
+	result := db.gorm.Create(business)
+	return result.Error
 }

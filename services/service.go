@@ -30,6 +30,14 @@ type BusinessMiddleWireServices struct {
 	stopped       atomic.Bool
 }
 
+func NewBusinessMiddleWireServices(db *database.DB, config *BusinessMiddleConfig, accountClient *rpcclient.WalletChainAccountClient) (*BusinessMiddleWireServices, error) {
+	return &BusinessMiddleWireServices{
+		BusinessMiddleConfig: config,
+		accountClient:        accountClient,
+		db:                   db,
+	}, nil
+}
+
 func (bws *BusinessMiddleWireServices) Stop(ctx context.Context) error {
 	bws.stopped.Store(true)
 	return nil
@@ -37,14 +45,6 @@ func (bws *BusinessMiddleWireServices) Stop(ctx context.Context) error {
 
 func (bws *BusinessMiddleWireServices) Stopped() bool {
 	return bws.stopped.Load()
-}
-
-func NewBusinessMiddleWireServices(db *database.DB, config *BusinessMiddleConfig, accountClient *rpcclient.WalletChainAccountClient) (*BusinessMiddleWireServices, error) {
-	return &BusinessMiddleWireServices{
-		BusinessMiddleConfig: config,
-		accountClient:        accountClient,
-		db:                   db,
-	}, nil
 }
 
 func (bws *BusinessMiddleWireServices) Start(ctx context.Context) error {
@@ -57,9 +57,7 @@ func (bws *BusinessMiddleWireServices) Start(ctx context.Context) error {
 		}
 		gs := grpc.NewServer(
 			grpc.MaxRecvMsgSize(MaxRecvMessageSize),
-			grpc.ChainUnaryInterceptor(
-				nil,
-			),
+			grpc.ChainUnaryInterceptor(nil),
 		)
 		reflection.Register(gs)
 
