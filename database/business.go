@@ -22,7 +22,7 @@ type BusinessView interface {
 
 type BusinessDb interface {
 	BusinessView
-	storageBusiness(*Business) error
+	StorageBusiness(*Business) error
 }
 
 type businessDb struct {
@@ -43,7 +43,7 @@ func (db *businessDb) QueryBusinessByUid(businessUid string) (*Business, error) 
 	return business, nil
 }
 
-func (db *businessDb) storageBusiness(business *Business) error {
+func (db *businessDb) StorageBusiness(business *Business) error {
 	result := db.gorm.Create(business)
 	return result.Error
 }

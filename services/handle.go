@@ -26,7 +26,7 @@ func (bws *BusinessMiddleWireServices) BusinessRegister(ctx context.Context, req
 		TxFlowNotify:   request.TxFlowNotify,
 		Timestamp:      uint64(time.Now().Unix()),
 	}
-	err := bws.db.Business.StoreBusiness(business)
+	err := bws.db.Business.StorageBusiness(business)
 	if err != nil {
 		log.Error("store business fail", "err", err)
 		return &dal_wallet_go.BusinessRegisterResponse{
