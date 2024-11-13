@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/urfave/cli/v2"
+
 	"github.com/zhaohaibing666/multichain-sync-account/flags"
 )
 

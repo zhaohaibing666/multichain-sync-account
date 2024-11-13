@@ -4,9 +4,9 @@ import (
 	"context"
 	"os"
 
-	"github.com/zhaohaibing666/multichain-sync-account/common/opio"
-
 	"github.com/ethereum/go-ethereum/log"
+
+	"github.com/zhaohaibing666/multichain-sync-account/common/opio"
 )
 
 var (
@@ -19,7 +19,7 @@ func main() {
 	app := NewCli(GitCommit, GitData)
 	ctx := opio.WithInterruptBlocker(context.Background())
 	if err := app.RunContext(ctx, os.Args); err != nil {
-		log.Error("Application failed")
+		log.Error("Application failed", err)
 		os.Exit(1)
 	}
 }
